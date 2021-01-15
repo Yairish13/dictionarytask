@@ -33,7 +33,6 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   const store = React.useContext(StoreContext);
-  console.log(store);
   let counter = (str: any) => {
     return str.split("").reduce((total: any, letter: any) => {
       total[letter] ? total[letter]++ : (total[letter] = 1);
@@ -82,7 +81,6 @@ function App() {
 
           //made to sort the letters from most common and down
           const topCommon = Object.values(commonObj).sort((a:any, b:any) => b - a);
-          console.log(topCommon)
           const data = {};
           for (let j = 0; j < 5; j++) {
             const name = Object.keys(commonObj).find(
@@ -91,7 +89,6 @@ function App() {
             //@ts-ignore
             data[name] = topCommon[j];
           }
-          console.log();
           const longestWord = await allWords.reduce(
             (a, b) => (a.length < b.length ? b : a),
             ""
