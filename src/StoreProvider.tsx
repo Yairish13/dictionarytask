@@ -54,13 +54,12 @@ configure({
   @computed get topCommonData() {
     return this?.topCommon;
   }
-  //@ts-ignore
+  // @ts-ignore
   @action saveTopCommon(data){
     this.topCommon.value = data
   }
-  //@ts-ignore
+  // @ts-ignore
   @action saveGraph(topCommon){
-    //@ts-ignore
     this.graphChart.value = topCommon
   }
   @action savePie(){

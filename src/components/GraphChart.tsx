@@ -1,5 +1,5 @@
 import React from "react";
-import { Bar, Pie,defaults } from "react-chartjs-2";
+import { Bar } from "react-chartjs-2";
 
 import { StoreContext } from "../StoreContext";
 import { useObserver } from "mobx-react";

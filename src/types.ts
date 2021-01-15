@@ -1,13 +1,6 @@
-import {ReactNode,FC} from 'react';
-// import { RootStoreModel } from "./rootStore";
 
 export type wordType = "start" | "end" | "double" | "sum";
 
-// export interface IWordsInterface{
-//   data:string[]
-//   total:number
-//   
-// }
 export interface IWordsValue{
 data:string[]|{};
 total?:number;
@@ -51,39 +44,8 @@ export interface IMobxStore {
   addMostCommon:(mostCommon:string)=>void
   addLongestWord:(longestWord:string)=>void
 savePie:()=>void;
+saveGraph:(topCommon:ITopCommon)=>void
 }
- 
-
-  // @computed get topCommonData() {
-  //   //@ts-ignore
-  //   return this?.topCommon;
-  // }
-  // //@ts-ignore
-  // @action saveTopCommon(data){
-  //   //@ts-ignore
-  //   this.topCommon.value = data
-  // }
-  // //@ts-ignore
-  // @action saveGraph(topCommon){
-  //   //@ts-ignore
-  //   this.graphChart.value = topCommon
-  // }
-  // //@ts-ignore
-  // @action savePie(){
-  //   //@ts-ignore
-  //  this.pieChart.value = [this.startWordsCount,this.endWordsCount, this.doubleWordsCount]
-  // }
-  // //@ts-ignore
-  // @action addLongestWord(longestWord){
-  //   this.longestWord = longestWord
-  // }
-  // //@ts-ignore
-  // @action addMostCommon(mostCommon){
-  //   this.mostCommon = mostCommon
-  // }
-  // //@ts-ignore
-  // @action addWords(type: wordType, word, letter: string)
-
 
 interface IParams{
     letterPattern: string;
