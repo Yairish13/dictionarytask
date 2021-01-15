@@ -127,7 +127,8 @@ function App() {
               type="text"
               onChange={(e) => handleChange(e)}
               value={inputValue}
-              placeholder="Please enter a letter"
+              placeholder='Letter Input'
+              placeholder-color='black'
             ></Input>
         </Header>
         {inputValue ? (

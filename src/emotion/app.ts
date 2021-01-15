@@ -91,4 +91,8 @@ export const Input = styled.input`
     border-bottom: 2px solid #333333;
     outline: 0;
   }
+  ::placeholder { 
+  color: black;
+  opacity: 1; 
+}
 `;
