@@ -15,7 +15,7 @@ const StartWords = () => {
       <span>
         Words start 
         {store.startWords?.letter
-          ? "with the letter " +
+          ? " with the letter " +
             store.startWords?.letter
           : ""}
       </span>

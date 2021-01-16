@@ -1,8 +1,7 @@
 import React from "react";
-import { Doughnut, Pie } from "react-chartjs-2";
+import { Doughnut } from "react-chartjs-2";
 import { StoreContext } from "../StoreContext";
 import { useObserver } from "mobx-react";
-
 
 function PieChart() {
   const store = React.useContext(StoreContext);

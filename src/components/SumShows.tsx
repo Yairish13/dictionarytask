@@ -16,7 +16,7 @@ function SumShows() {
           <span>
             Appearences in the dictionary
             {store.sumShows?.letter
-              ? "of the letter " +
+              ? " of the letter " +
                 store.sumShows?.letter
               : ""}
           </span>

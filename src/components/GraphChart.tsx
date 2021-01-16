@@ -1,12 +1,10 @@
 import React from "react";
 import { Bar } from "react-chartjs-2";
-
 import { StoreContext } from "../StoreContext";
 import { useObserver } from "mobx-react";
 
 function GraphChart() {
   const store = React.useContext(StoreContext);
-
  const data = {
     labels: store.topCommonKeys.value,
     datasets: [

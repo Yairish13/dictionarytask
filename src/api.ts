@@ -2,13 +2,6 @@ import axios from 'axios'
 import {IOptions} from './types'
 
 
-//  const getData = (input:string) =>{
-//     return axios.request(getOptions(input)).then(function (response) {
-//         return response.data
-//       }).catch(function (error) {
-//         console.error(error);
-//       });
-// }
 export const getAllData = async() =>{
   try{
 const {data} = await axios.request(getAllOptions())

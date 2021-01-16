@@ -2,8 +2,6 @@ import React from 'react'
 import {StoreContext} from '../StoreContext'
 import { useObserver } from "mobx-react";
 import {WordsDiv} from "../emotion/words"
-import { IMobxStore } from '../types';
-
 
 function DoubleWords() {
     const store = React.useContext(StoreContext);
@@ -17,13 +15,12 @@ function DoubleWords() {
           <span>
             Words have letter repetition  
             {store.doubleWords?.letter
-              ? "with the letter " +
+              ? " with the letter " +
                 store.doubleWords?.letter
               : ""}{" "}
           </span>
         </WordsDiv>
       ));
     };
-
 
 export default DoubleWords

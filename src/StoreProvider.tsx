@@ -3,7 +3,6 @@ import { configure } from "mobx";
 import {
   IMobxStore,
    wordType,
-   ITotal,
    IWordsValue
 } from './types'
 
@@ -12,7 +11,6 @@ configure({
 });
 
 const initialObj ={value:{data:[''],total:0},letter:''}
-
 
  class Store
  implements IMobxStore

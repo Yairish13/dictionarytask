@@ -22,9 +22,7 @@ import PieChart from "./components/PieChart";
 import LongestWord from "./components/LongestWord";
 import MostCommon from "./components/MostCommon";
 import GraphChart from "./components/GraphChart";
-import { ITopCommon, ITotal, IWords, IWordsValue } from "./types";
-// import {IMobxStore} from "./types";
-
+import { ITopCommon, ITotal, IWordsValue } from "./types";
 configure({
   useProxies: "always",
 });
@@ -34,12 +32,14 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   const store = React.useContext(StoreContext);
-  let counter = (str: string) => {
+  const counter = (str: string) => {
     return str.split("").reduce((total: ITotal, letter: string) => {
       total[letter] ? total[letter]++ : (total[letter] = 1);
       return total;
     }, {});
   };
+
+  const isAlpha = (inputValue: string) => /^[A-Z]$/i.test(inputValue);
 
   let input = "";
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,15 +101,11 @@ function App() {
               value:topCommonArr.slice(0,5)
             }
 
-            
-          
-
           store.saveGraph(topCommon.value);
 
           const topCommons:number[] = store.topCommon.value
           const topCommoKeys= Object.keys(data).sort((a:any,b:any)=>  topCommons[b]-topCommons[a])
-  
-          
+
           const startWords:IWordsValue = await getFirstData(input);
           const endWords:IWordsValue = await getLastData(input);
           const doubleWords:IWordsValue = await getDoubleData(input);
@@ -131,7 +127,6 @@ function App() {
       })();
     }
   };
-  const isAlpha = (inputValue: string) => /^[A-Z]$/i.test(inputValue);
 
   return (
     <div>
