@@ -22,6 +22,7 @@ import PieChart from "./components/PieChart";
 import LongestWord from "./components/LongestWord";
 import MostCommon from "./components/MostCommon";
 import GraphChart from "./components/GraphChart";
+import { ITopCommon, ITotal, IWords, IWordsValue } from "./types";
 // import {IMobxStore} from "./types";
 
 configure({
@@ -33,81 +34,96 @@ function App() {
   const [loading, setLoading] = useState(false);
 
   const store = React.useContext(StoreContext);
-  let counter = (str: any) => {
-    return str.split("").reduce((total: any, letter: any) => {
+  let counter = (str: string) => {
+    return str.split("").reduce((total: ITotal, letter: string) => {
       total[letter] ? total[letter]++ : (total[letter] = 1);
       return total;
     }, {});
   };
 
   let input = "";
-  const handleChange = (e: any) => {
-    if ((input = "")) {
-      setLoading(false);
-    }
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     input = e.target.value;
-    if (!isAlpha(input) && input != "") {
+    if (input.length < 2) {
+      setInputValue(input);
+    }
+    if (input === "") {
+      setLoading(false);
+      return;
+    }
+    if (!isAlpha(input)) {
+      setInputValue("");
       alert("type only letters");
+      return;
     } else {
       (async () => {
         try {
-          setInputValue(input);
           setLoading(true);
           const allInfo = await getAllData();
           const allDataStr = await allInfo.data.join(" ");
-          var words = await allDataStr.split(" ");
+          const words: string[] = await allDataStr.split(" ");
           for (var i = 0; i < words.length - 1; i++) {
             words[i] += "";
           }
-          //@ts-ignore
-          const allWords = [...new Set(words)];
-          for (let i = 0; i < allWords.length; i++) {
-            let count;
-          }
+          // const allWords = [new Set(words)];
+          const allWords: string[] = Array.from(new Set(words));
           input = input.toLowerCase();
-          const sumShowsInfo = allWords
+          const sumShowsInfo: string[] = allWords
             .join("")
             .split("")
-            .filter((i:string) => i.toLowerCase() == input);
-          const sumShows = sumShowsInfo.length;
+            .filter((i: string) => i.toLowerCase() === input);
+          const sumShows: number = sumShowsInfo.length;
 
           //object with key and value of whole the letters in the dictionary
-          const commonObj = counter(allWords.join(""));
+          const commonObj: ITotal = counter(allWords.join(""));
 
           //find the most common letter in the dictionary
-          const mostCommon = Object.keys(commonObj).reduce((a, b) =>
+          const mostCommon: string = Object.keys(commonObj).reduce((a, b) =>
             commonObj[a] > commonObj[b] ? a : b
           );
 
           //made to sort the letters from most common and down
-          const topCommon = Object.values(commonObj).sort((a:any, b:any) => b - a);
-          const data = {};
+          const topCommonArr: number[] = Object.values(commonObj).sort(
+            (a: number, b: number) => b - a
+          );
+          const data:ITotal = {};
           for (let j = 0; j < 5; j++) {
-            const name = Object.keys(commonObj).find(
-              (key) => commonObj[key] === topCommon[j]
+            const name:string|undefined = Object.keys(commonObj).find(
+              (key) => commonObj[key] === topCommonArr[j]
             );
-            //@ts-ignore
-            data[name] = topCommon[j];
+            if (name) data[name] = topCommonArr[j];
           }
-          const longestWord = await allWords.reduce(
+          const longestWord:string = allWords.reduce(
             (a, b) => (a.length < b.length ? b : a),
             ""
           );
+            const topCommon:ITopCommon = {
+              value:topCommonArr.slice(0,5)
+            }
 
-          const startWords = await getFirstData(input);
-          const endWords = await getLastData(input);
-          const doubleWords = await getDoubleData(input);
+            
+          
+
+          store.saveGraph(topCommon.value);
+
+          const topCommons:number[] = store.topCommon.value
+          const topCommoKeys= Object.keys(data).sort((a:any,b:any)=>  topCommons[b]-topCommons[a])
+  
+          
+          const startWords:IWordsValue = await getFirstData(input);
+          const endWords:IWordsValue = await getLastData(input);
+          const doubleWords:IWordsValue = await getDoubleData(input);
           input = input.toUpperCase();
           store.addLongestWord(longestWord);
           store.addMostCommon(mostCommon);
           store.addWords("end", endWords, input);
           store.addWords("start", startWords, input);
           store.addWords("double", doubleWords, input);
-          store.addWords("sum", sumShows, input);
+          store.addSumShows(sumShows,input);
           store.savePie();
-          //@ts-ignore
-          store.saveGraph(topCommon.slice(0, 5));
-          store.saveTopCommon(data);
+          store.saveTopCommonKeys(topCommoKeys);
+          store.saveTopCommon(topCommon)
+          console.log(store)
         } catch {
         } finally {
           setLoading(false);
@@ -115,21 +131,20 @@ function App() {
       })();
     }
   };
-  const isAlpha = (inputValue:string)=> 
-     /^[A-Z]$/i.test(inputValue);
+  const isAlpha = (inputValue: string) => /^[A-Z]$/i.test(inputValue);
 
   return (
     <div>
       <AppContainer>
         <Header>
           <Title>Dictionary Groove</Title>
-            <Input
-              type="text"
-              onChange={(e) => handleChange(e)}
-              value={inputValue}
-              placeholder='Letter Input'
-              placeholder-color='black'
-            ></Input>
+          <Input
+            type="text"
+            onChange={handleChange}
+            value={inputValue}
+            placeholder="Letter Input"
+            placeholder-color="black"
+          ></Input>
         </Header>
         {inputValue ? (
           <>

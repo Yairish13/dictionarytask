@@ -1,27 +1,36 @@
 
 export type wordType = "start" | "end" | "double" | "sum";
 
+
+export interface ITotal{
+  [key: string]:  number;
+}
 export interface IWordsValue{
-data:string[]|{};
-total?:number;
+data:string[];
+total:number;
 }
 export interface IWords{
   value:IWordsValue;
   letter?:string;
 }
-export interface IPieChart{
-  value:number[];
-}
+
 
 export interface ISumShows{
   value:number;
-  letter?:string
+  letter:string
 }
 export interface ITopCommon{
 key?:string;
 value:number[];
 }
 
+export interface IStrArr{
+  data:string[]
+}
+
+export interface IPieChart{
+  value:number[];
+}
 export interface IMobxStore {
   input: string;
   mostCommon:string;
@@ -29,22 +38,30 @@ export interface IMobxStore {
   pieChart :IPieChart;
   sumShows :ISumShows;
   topCommon :ITopCommon ;
+  topCommonKeys :ITopCommon;
   graphChart: ITopCommon;
+  graphChartData:ITopCommon;
+
+
   startWords :IWords;
   endWords :IWords;
   doubleWords :IWords;
+
   startWordsCount: number ;
   endWordsCount: number ;
   doubleWordsCount: number ;
   sumShowsCount : number;
+
   pieChartData: IPieChart;
-  graphChartData:ITopCommon[];
+
   saveTopCommon:(data:any)=>void;
-  addWords:(type: wordType, word:IWords|number, letter: string)=>void
-  addMostCommon:(mostCommon:string)=>void
-  addLongestWord:(longestWord:string)=>void
-savePie:()=>void;
-saveGraph:(topCommon:ITopCommon)=>void
+  saveTopCommonKeys:(data:any)=>void;
+  addWords:(type: wordType, word:IWordsValue, letter: string)=>void;
+  addSumShows:(count: number,input:string)=>void;
+  addMostCommon:(mostCommon:string)=>void;
+  addLongestWord:(longestWord:string)=>void;
+savePie: ()=> void;
+saveGraph:(topCommon:number[])=>void;
 }
 
 interface IParams{

@@ -3,18 +3,15 @@ import { configure } from "mobx";
 import {
   IMobxStore,
    wordType,
-   ISumShows,
-   IPieChart,
-   ITopCommon,
-   IWords,
+   ITotal,
    IWordsValue
-  // IWordsInterface
 } from './types'
 
 configure({
   useProxies: "always",
 });
 
+const initialObj ={value:{data:[''],total:0},letter:''}
 
 
  class Store
@@ -24,23 +21,24 @@ configure({
     makeObservable(this);
   }
   input='';
-  @observable topCommon = {key:'',value:[]}
+  @observable topCommonKeys= {key:'',value:[0]}
+  @observable topCommon = {key:'',value:[0]}
   @observable mostCommon= '';
   @observable longestWord = '';
-  @observable pieChart= {value:[]};
-  @observable graphChart ={key:'',value:[]}
-  @observable startWords = {value:{data:[],total:0},letter:''};
-  @observable endWords = {value:{data:[],total:0},letter:''};
-  @observable doubleWords = {value:{data:[],total:0},letter:''};
-  @observable sumShows={value:0};
+  @observable pieChart= {value:[0]};
+  @observable graphChart ={value:[0]}
+  @observable startWords = {...initialObj};
+  @observable endWords = {...initialObj};
+  @observable doubleWords = {...initialObj};
+  @observable sumShows={value:0,letter:''};
   @computed get startWordsCount() {
-    return this.startWords.value?.total;
+    return this.startWords?.value?.total;
   }
   @computed get endWordsCount() {
-    return this.endWords.value?.total;
+    return this.endWords?.value?.total;
   }
   @computed get doubleWordsCount() {
-    return this.doubleWords.value?.total;
+    return this.doubleWords?.value?.total;
   }
   @computed get sumShowsCount() {
     return this.sumShows?.value;
@@ -49,22 +47,16 @@ configure({
     return this.pieChart;
   }
   @computed get graphChartData() {
-    return this.graphChart.value;
+    return this.graphChart;
   }
   @computed get topCommonData() {
     return this?.topCommon;
   }
-  // @ts-ignore
-  @action saveTopCommon(data){
-    this.topCommon.value = data
+  @action saveTopCommon(arr:number[]){
+    this.topCommon.value = arr
   }
-  // @ts-ignore
-  @action saveGraph(topCommon){
-    this.graphChart.value = topCommon
-  }
-  @action savePie(){
-    //@ts-ignore
-   this.pieChart.value = [this.startWordsCount,this.endWordsCount, this.doubleWordsCount]
+  @action saveTopCommonKeys(arr:number[]){
+    this.topCommonKeys.value = arr
   }
   @action addLongestWord(longestWord:string){
     this.longestWord = longestWord
@@ -72,8 +64,7 @@ configure({
   @action addMostCommon(mostCommon:string){
     this.mostCommon = mostCommon
   }
-  //@ts-ignore
-  @action addWords(type: wordType, word, letter: string) {
+  @action addWords(type: wordType, word:IWordsValue, letter: string) {
     switch (type) {
       case "start":
         this.startWords.value = word;
@@ -87,12 +78,21 @@ configure({
         this.doubleWords.value = word;
         this.doubleWords.letter = letter;
         break;
-      case "sum":
-        this.sumShows.value = word;
-        // this.sumShows.letter = letter;
-        break;
     }
   }
+  @action addSumShows(count:number,input:string){
+    this.sumShows.value = count;
+    this.sumShows.letter = input;
+  }
+    @action saveGraph(topCommon:number[]){
+      this.graphChart.value = topCommon
+    }
+
+    @action savePie(){
+     this.pieChart.value[0] = this.startWords.value.total
+     this.pieChart.value[1] = this.endWords.value.total
+     this.pieChart.value[2] = this.endWords.value.total
+    }
 }
 
 export const storeInstance = new Store();

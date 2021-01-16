@@ -6,10 +6,9 @@ import { useObserver } from "mobx-react";
 
 function GraphChart() {
   const store = React.useContext(StoreContext);
-  const topCommon = store.topCommon.value
-  const arr= Object.keys(topCommon).sort((a:any,b:any)=>  topCommon[b]-topCommon[a])
+
  const data = {
-    labels: arr,
+    labels: store.topCommonKeys.value,
     datasets: [
         {
             label:['Most common letters appearences in dictionary'],
@@ -18,7 +17,7 @@ function GraphChart() {
             borderWidth: 1,
             hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56","yellow",'grey'],
             hoverBorderColor: 'rgba(255,99,132,1)',
-            data: store?.graphChartData
+            data: store?.graphChartData.value
           },
     ],
   };
