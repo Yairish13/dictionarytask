@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import StartWords from "./components/StartWords";
 import { StoreContext } from "./StoreContext";
 import EndWords from "./components/EndWords";
@@ -6,10 +6,7 @@ import DoubleWords from "./components/DoubleWords";
 import { configure } from "mobx";
 import{observer} from 'mobx-react'
 import {
-  Input,
-  Title,
   AppContainer,
-  Header,
   GlobalInfo,
   InfoContainer,
   ChartContainer,
@@ -33,7 +30,7 @@ function App() {
     store.getLongestWord()
     store.getMostCommonLetter()
     store.getTopCommon();
-  },[]); 
+  },[store]); 
   return (
     <div>
       <AppContainer>

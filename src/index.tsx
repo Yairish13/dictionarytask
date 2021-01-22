@@ -9,7 +9,6 @@ import { StoreContext } from "./StoreContext";
 ReactDOM.render(
   <div>
       <StoreContext.Provider
-      //@ts-ignore
        value={storeInstance}>
         <App />
       </StoreContext.Provider>
