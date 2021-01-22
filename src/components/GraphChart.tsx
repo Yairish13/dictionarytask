@@ -6,7 +6,7 @@ import { useObserver } from "mobx-react";
 function GraphChart() {
   const store = React.useContext(StoreContext);
  const data = {
-    labels: store.topCommonKeys.value,
+    labels:store.topCommonKeys ,
     datasets: [
         {
             label:['Most common letters appearences in dictionary'],
@@ -15,14 +15,14 @@ function GraphChart() {
             borderWidth: 1,
             hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56","yellow",'grey'],
             hoverBorderColor: 'rgba(255,99,132,1)',
-            data: store?.graphChartData.value
+            data: store.topCommonValues
           },
     ],
   };
 
   return useObserver(
     () =>
-      store.graphChart && (
+      store.topCommonKeys && (
           <Bar
             data={data}
             options={{ maintainAspectRatio: false }}

@@ -6,18 +6,17 @@ import {WordsDiv} from '../emotion/words'
 function SumShows() {
     const store = React.useContext(StoreContext);
     return useObserver(() => (
-      store.sumShows &&
         <WordsDiv>
           <span>
             {
-              store.sumShowsCount || 0
+              store.wordsThatTotal || 0
             }
           </span>
           <span>
             Appearences in the dictionary
-            {store.sumShows?.letter
+            {store.selectedLetter
               ? " of the letter " +
-                store.sumShows?.letter
+                store.selectedLetter
               : ""}
           </span>
         </WordsDiv>

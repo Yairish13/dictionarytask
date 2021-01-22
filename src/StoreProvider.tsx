@@ -1,16 +1,11 @@
 import { observable, action, makeObservable, computed } from "mobx";
 import { configure } from "mobx";
-import {
-  IMobxStore,
-   wordType,
-   IWordsValue
-} from './types'
+import{getAllData} from './api';
+import {IMobxStore, IWords} from './types'
 
 configure({
   useProxies: "always",
 });
-
-const initialObj ={value:{data:[''],total:0},letter:''}
 
  class Store
  implements IMobxStore
@@ -18,79 +13,101 @@ const initialObj ={value:{data:[''],total:0},letter:''}
   constructor() {
     makeObservable(this);
   }
-  input='';
-  @observable topCommonKeys= {key:'',value:[0]}
-  @observable topCommon = {key:'',value:[0]}
-  @observable mostCommon= '';
-  @observable longestWord = '';
-  @observable pieChart= {value:[0]};
-  @observable graphChart ={value:[0]}
-  @observable startWords = {...initialObj};
-  @observable endWords = {...initialObj};
-  @observable doubleWords = {...initialObj};
-  @observable sumShows={value:0,letter:''};
-  @computed get startWordsCount() {
-    return this.startWords?.value?.total;
-  }
-  @computed get endWordsCount() {
-    return this.endWords?.value?.total;
-  }
-  @computed get doubleWordsCount() {
-    return this.doubleWords?.value?.total;
-  }
-  @computed get sumShowsCount() {
-    return this.sumShows?.value;
-  }
-  @computed get pieChartData() {
-    return this.pieChart;
-  }
-  @computed get graphChartData() {
-    return this.graphChart;
-  }
-  @computed get topCommonData() {
-    return this?.topCommon;
-  }
-  @action saveTopCommon(arr:number[]){
-    this.topCommon.value = arr
-  }
-  @action saveTopCommonKeys(arr:number[]){
-    this.topCommonKeys.value = arr
-  }
-  @action addLongestWord(longestWord:string){
-    this.longestWord = longestWord
-  }
-  @action addMostCommon(mostCommon:string){
-    this.mostCommon = mostCommon
-  }
-  @action addWords(type: wordType, word:IWordsValue, letter: string) {
-    switch (type) {
-      case "start":
-        this.startWords.value = word;
-        this.startWords.letter = letter;
-        break;
-      case "end":
-        this.endWords.value = word;
-        this.endWords.letter = letter;
-        break;
-      case "double":
-        this.doubleWords.value = word;
-        this.doubleWords.letter = letter;
-        break;
-    }
-  }
-  @action addSumShows(count:number,input:string){
-    this.sumShows.value = count;
-    this.sumShows.letter = input;
-  }
-    @action saveGraph(topCommon:number[]){
-      this.graphChart.value = topCommon
-    }
+  @observable.ref allWords:string[]=[''];
+  @observable longestWord:string ='';
+  @observable selectedLetter :string = '';
+  @observable mostCommonLetter:string = '';
+  @observable.ref topCommonValues: number[]=[0];
+  @observable.ref topCommonKeys:string[] = ['']
 
-    @action savePie(){
-     this.pieChart.value[0] = this.startWords.value.total
-     this.pieChart.value[1] = this.endWords.value.total
-     this.pieChart.value[2] = this.endWords.value.total
+  @action start = () =>{
+    this._getAllWords()
+  }
+ @action _getAllWords = async() =>{
+  const wordsFromStorage= JSON.parse(localStorage.getItem("allWords")|| '{}');
+    if(wordsFromStorage){
+      this.allWords = wordsFromStorage
     }
+    else{
+      const data = await getAllData()
+      const words: string[] =  data.join(' ').split(" ");
+      this.allWords=words;
+     localStorage.setItem("allWords", JSON.stringify(this.allWords));
+     }
+  }
+  @action setSelectedLetter = (input:string) =>{
+    this.selectedLetter = input
+  }
+  @action getLongestWord(){
+    this.longestWord= this.allWords.reduce(
+      (a, b) => (a.length < b.length ? b : a),
+      ""
+      );
+  }
+  @action getMostCommonLetter(){
+    const allWordsStr = this.allWords.join('');
+    const mostCommonObj = this.counter(allWordsStr)
+    if(mostCommonObj){
+      this.mostCommonLetter = Object.keys(mostCommonObj).reduce((a, b) =>
+      mostCommonObj[a] > mostCommonObj[b] ? a : b
+          ,'');
+    }
+  }
+  @action  getTopCommon(){
+    const allWordsStr = this.allWords.join('');
+    const mostCommonObj:IWords = this.counter(allWordsStr)
+    
+    const topCommonValues: number[] = Object.values(mostCommonObj).sort(
+            (a: number, b: number) => b - a
+          ).slice(0,5);
+          const topCommonKeys :string[]=[''];
+          for(let i =0;i<5;i++){
+            const name = Object.keys(mostCommonObj).find(
+                  (key) => mostCommonObj[key] === topCommonValues[i]
+                );
+                if (name) topCommonKeys.push(name) ;
+            }
+            this.topCommonValues = topCommonValues;
+            this.topCommonKeys = topCommonKeys.slice(1,6);
+            
+  }
+  @action  counter(str:string) {
+    return str.split("").reduce((total:any, letter:any) => {
+      total[letter] ? total[letter]++ : (total[letter] = 1);
+      return total;
+    }, {});
+  };
+  @computed get pieChart(){
+    return [this.wordsThatStart,this.wordsThatEnd,this.wordsThatDouble]
+   }
+
+  @computed get wordsThatStart() {
+    return  this.allWords?.reduce((acc:number,word:string)=>{
+      if(word[0] === this.selectedLetter) {return acc + 1;}
+      else {return acc;}
+    },0);
+  }
+  @computed get wordsThatEnd() {
+     return this.allWords?.reduce((acc:number,word:string)=>{
+      if(word[word.length-1] === this.selectedLetter) {return acc + 1;}
+      else {return acc;}
+    },0);
+  }
+  @computed get wordsThatDouble() {
+     return this.allWords?.reduce((acc:number,word:string)=>{
+   const regex = new RegExp(this.selectedLetter + this.selectedLetter);
+      if((regex).test(word)) {return acc + 1;}
+      else {return acc;}
+    },0);
+  }
+  @computed get wordsThatTotal(){
+    return  this.allWords?.join("")
+    .split("").reduce((acc:number,word:string)=>{
+      if(word === this.selectedLetter) {return acc + 1;}
+      else {return acc;}
+    },0);
+  }
+
 }
 
 export const storeInstance = new Store();

@@ -9,14 +9,14 @@ function DoubleWords() {
         <WordsDiv>
           <span>
             {
-              store.doubleWordsCount || 0
+              store.wordsThatDouble || 0
             }{" "}
           </span>
           <span>
             Words have letter repetition  
-            {store.doubleWords?.letter
+            {store.selectedLetter
               ? " with the letter " +
-                store.doubleWords?.letter
+                store.selectedLetter
               : ""}{" "}
           </span>
         </WordsDiv>

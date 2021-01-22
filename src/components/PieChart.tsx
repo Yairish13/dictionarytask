@@ -9,7 +9,7 @@ function PieChart() {
     labels: ["Words that starting ", "Words that ending", "Words that have double appearences"],
     datasets: [
       {
-        data:store.pieChartData.value,
+        data:store.pieChart,
         backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
         hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
       },

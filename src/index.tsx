@@ -8,11 +8,15 @@ import { StoreContext } from "./StoreContext";
 
 ReactDOM.render(
   <div>
-      <StoreContext.Provider value={storeInstance}>
+      <StoreContext.Provider
+      //@ts-ignore
+       value={storeInstance}>
         <App />
       </StoreContext.Provider>
   </div>,
-  document.getElementById("root")
-);
+  document.getElementById("root"),
+  
+)
+;
 
 reportWebVitals();

@@ -9,14 +9,14 @@ const StartWords = () => {
     <WordsDiv>
       <span>
         {
-          store.startWordsCount || 0
+          store?.wordsThatStart || 0
         }
       </span>
       <span>
         Words start 
-        {store.startWords?.letter
+        {store?.selectedLetter
           ? " with the letter " +
-            store.startWords?.letter
+            store?.selectedLetter
           : ""}
       </span>
     </WordsDiv>

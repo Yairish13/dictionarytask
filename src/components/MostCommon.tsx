@@ -8,7 +8,7 @@ const MostCommon = () => {
   return useObserver(() => (
     <WordsDiv>
       <span>
-        {store.mostCommon}
+        {store.mostCommonLetter}
       </span>
       <span>The most common letter in the dictionary  </span>
     </WordsDiv>
